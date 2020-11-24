@@ -21,24 +21,42 @@ func main() {
 }
 
 func encode() {
-	resp, err := http.Get("http://local.scoir.com:7779/agents/hogwarts/invitation/subject")
+	client := http.Client{}
+	req, err := http.NewRequest(http.MethodGet, "http://localhost:7779/agents/test123/invitation/xyz987", nil)
 	if err != nil {
-		log.Fatalf("Error requesting invitation from issuer: %v\n", err)
+		log.Println("error creating request", err)
+		return
 	}
-	defer resp.Body.Close()
+	req.Header.Add("X-API-Key", "D3YYdahdgC7VZeJwP4rhZcozCRHsqQT3VKxK9hTc2Yoh")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Println("failed to execute request", err)
+		return
+	}
+
+	defer func() {
+		err := resp.Body.Close()
+		if err != nil {
+			log.Println("failed to close body", err)
+		}
+	}()
 
 	m := map[string]interface{}{}
 	err = json.NewDecoder(resp.Body).Decode(&m)
 	if err != nil {
-		log.Fatalln("fuck off", err)
+		log.Println("error decoding map", err)
+		return
 	}
 
-	b := m["invitation"].(string)
+	log.Println(m)
+
+	b := m["Invitation"].(string)
 
 	ci := base64.URLEncoding.EncodeToString([]byte(b))
 	str := fmt.Sprintf("http://192.168.86.30/?c_i=%s", ci)
 
-	fmt.Println(b)
+	fmt.Println("poop", ci)
 
 	fname := "./invite.png"
 	err = qrcode.WriteFile(str, qrcode.Medium, 256, fname)

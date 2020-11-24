@@ -24,3 +24,18 @@ the canis docker container required for the docker execution environment, ensure
 % make canis-docker
 ```
 
+To deploy run 
+
+```
+% docker-compose up --force-recreate
+```
+
+from the `deplop/compose` directory
+
+To create an aries rest agent run
+
+```
+% docker-compose up --force-recreate
+```
+
+from the `deplop/compose/aries-agent-rest` directory. This agent can be used in conjunction with mobile testing.
